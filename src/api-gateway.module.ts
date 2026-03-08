@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ApiGatewayController } from './api-gateway.controller';
-import { EcommerceModule } from './module/ecommerce/ecommerce.module';
+import { EcommerceModule } from './module/product/product.module';
 import { ClientsModule } from '@nestjs/microservices';
 import { clientProxyConfigs } from './config/microservice.config';
 import { ConfigModule } from '@nestjs/config';
