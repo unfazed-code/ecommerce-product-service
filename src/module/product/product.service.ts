@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { EcommerceLoggerService } from '../../utils/logger.service';
+import { LoggerService } from '../../utils/logger.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly logger: EcommerceLoggerService) {
+  constructor(private readonly logger: LoggerService) {
     logger.setContext(ProductService.name);
   }
 

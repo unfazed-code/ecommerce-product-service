@@ -1,14 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
-import { EcommerceLoggerService } from '../../utils/logger.service';
+import { LoggerService } from '../../utils/logger.service';
 import { ConfigModule } from '@nestjs/config';
 import { envConfigOptions } from 'src/config/env.config';
-import { DatabaseModule } from 'src/utils/database.module';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { sequelizeConfig } from 'src/config/database.config';
 
 @Module({
-  imports: [ConfigModule.forRoot(envConfigOptions), DatabaseModule],
+  imports: [
+    ConfigModule.forRoot(envConfigOptions),
+    SequelizeModule.forRootAsync(sequelizeConfig),
+  ],
   controllers: [ProductController],
-  providers: [ProductService, EcommerceLoggerService],
+  providers: [ProductService, LoggerService],
+  exports: [ConfigModule],
 })
-export class EcommerceModule {}
+export class ProductModule {}

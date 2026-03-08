@@ -2,6 +2,7 @@ import { ConfigModuleOptions } from '@nestjs/config';
 import Joi from 'joi';
 
 export const envConfigOptions: ConfigModuleOptions = {
+  isGlobal: true,
   validationSchema: Joi.object({
     NODE_ENV: Joi.string()
       .valid('development', 'production', 'test')

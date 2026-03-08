@@ -1,19 +1,25 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './api-gateway.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { EcommerceModule } from './module/product/product.module';
+import { ProductModule } from './module/product/product.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './config/swagger.config';
 import helmet from 'helmet';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
-  // test service (http) + ecommerce microservice (tcp)
-  const apiGatewayService = await NestFactory.create(AppModule);
-  const ecommerceMicroservice =
-    await NestFactory.createMicroservice<MicroserviceOptions>(EcommerceModule, {
+  // gateway service (http) + ecommerce microservice (tcp)
+  const apiGatewayLogger = new Logger('api-gateway-svc');
+  const productMicroserviceLogger = new Logger('product-svc');
+  const apiGatewayService = await NestFactory.create(AppModule, {
+    logger: apiGatewayLogger,
+  });
+  const productMicroservice =
+    await NestFactory.createMicroservice<MicroserviceOptions>(ProductModule, {
       transport: Transport.TCP,
+      logger: productMicroserviceLogger,
       options: {
-        host: 'localhost',
+        host: process.env.ECOMMERCE_SERVICE_URL,
         port: Number(process.env.ECOMMERCE_SERVICE_PORT),
       },
     });
@@ -27,7 +33,13 @@ async function bootstrap() {
   apiGatewayService.use(helmet());
   apiGatewayService.enableCors();
 
-  await ecommerceMicroservice.listen();
+  await productMicroservice.listen();
+  productMicroserviceLogger.log(
+    `Product microservice listening on port ${process.env.ECOMMERCE_SERVICE_PORT}`,
+  );
   await apiGatewayService.listen(Number(process.env.API_GATEWAY_PORT));
+  apiGatewayLogger.log(
+    `Api Gateway service listening on port ${process.env.API_GATEWAY_PORT}`,
+  );
 }
 bootstrap();
