@@ -34,5 +34,11 @@ services:
     env_file:
       - .env
 
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
 volumes:
   mysql_data:
