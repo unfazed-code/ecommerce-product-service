@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { EcommerceModule } from './module/ecommerce.module';
+import { ClientsModule } from '@nestjs/microservices';
+import { ecommerceClientProxyConfig } from './config/microservice.config';
 
 @Module({
-  imports: [],
+  imports: [
+    ClientsModule.register([ecommerceClientProxyConfig]),
+    EcommerceModule,
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
