@@ -1,22 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
+import { ApiGatewayController } from './api-gateway.controller';
 import { ecommerceClientProxyConfig } from './config/microservice.config';
 import { ClientsModule } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 let app: TestingModule;
 
-describe('AppController', () => {
-  let appController: AppController;
+describe('ApiGatewayController', () => {
+  let apiGatewayController: ApiGatewayController;
 
   beforeEach(async () => {
     app = await Test.createTestingModule({
       imports: [ClientsModule.register([ecommerceClientProxyConfig])],
-      controllers: [AppController],
+      controllers: [ApiGatewayController],
       providers: [],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    apiGatewayController = app.get<ApiGatewayController>(ApiGatewayController);
   });
 
   afterEach(async () => {
@@ -25,8 +25,8 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', async () => {
-      console.log(await firstValueFrom(appController.getHello()));
-      const result = await firstValueFrom(appController.getHello());
+      console.log(await firstValueFrom(apiGatewayController.getHello()));
+      const result = await firstValueFrom(apiGatewayController.getHello());
       expect(result).toBe('Hello World!');
     });
   });

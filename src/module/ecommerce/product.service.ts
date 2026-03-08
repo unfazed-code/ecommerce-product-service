@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { EcommerceLoggerService } from './logger.service';
 
 @Injectable()
 export class ProductService {
+  constructor(private readonly logger: EcommerceLoggerService) {
+    logger.setContext(ProductService.name);
+  }
+
   getHello(): string {
     return 'Hello World!';
   }

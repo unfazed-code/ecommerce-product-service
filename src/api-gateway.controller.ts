@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ECOMMERCE_SERVICE_CLIENT } from './config/microservice.config';
 
 @Controller()
-export class AppController {
+export class ApiGatewayController {
   constructor(
     @Inject(ECOMMERCE_SERVICE_CLIENT) private readonly client: ClientProxy,
   ) {}
