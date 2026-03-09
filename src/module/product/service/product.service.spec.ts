@@ -170,4 +170,25 @@ describe('ProductService', () => {
     await service.delete(product.id);
     expect(product.destroy).toHaveBeenCalled();
   });
+
+  it('INDEX: should list products with pagination data', async () => {
+    const products = Array(10).map((id: number) => ({
+      id,
+      name: `product-${id}`,
+      price: 10,
+      stock: 50,
+      productToken: `product-token-${id}`,
+    }));
+    productModel.findAndCountAll = jest
+      .fn()
+      .mockResolvedValue({ count: 50, rows: products });
+
+    const result = await service.index({ page: 1, perPage: 10 });
+    expect(result.data.length).toBe(10);
+    expect(result.currentPage).toBe(1);
+    expect(result.previousPage).toBe(null);
+    expect(result.nextPage).toBe(2);
+    expect(result.count).toBe(50);
+    expect(result.perPage).toBe(10);
+  });
 });
