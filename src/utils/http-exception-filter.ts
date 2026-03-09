@@ -18,10 +18,10 @@ export class ExceptionFilter implements RpcExceptionFilter<RpcException> {
       statusCode = ProductErrorMapping[error as ProductError];
     }
 
-    // console.log('=========>', error);
     return throwError(() => ({
       statusCode,
-      message: error,
+      error: error,
+      message: [error],
       timestamp: new Date().toISOString(),
     }));
   }

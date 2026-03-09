@@ -1,17 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { ProductService } from './product.service';
-import { ProductMessagePattern } from './product.type';
+import { ProductService } from '../service/product.service';
+import { ProductMessagePattern } from '../product.type';
 import { CreateProductDto } from './create-product.dto';
 
 @Controller()
-export class ProductController {
+export class ProductRpcController {
   constructor(private readonly service: ProductService) {}
-
-  @MessagePattern('HELLO')
-  getHello() {
-    return this.service.getHello();
-  }
 
   @MessagePattern(ProductMessagePattern.INDEX)
   index() {

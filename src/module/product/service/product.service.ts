@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { LoggerService } from '../../utils/logger.service';
+import { LoggerService } from '../../../utils/logger.service';
 import { InjectModel } from '@nestjs/sequelize';
-import { Product } from './product.entity';
-import { CreateProductDto } from './create-product.dto';
+import { Product } from '../model/product.entity';
+import { CreateProductDto } from '../controller/create-product.dto';
 import { RpcException } from '@nestjs/microservices';
-import { ProductError } from './product.type';
+import { ProductError } from '../product.type';
 
 @Injectable()
 export class ProductService {
@@ -16,15 +16,18 @@ export class ProductService {
     logger.setContext(ProductService.name);
   }
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   index() {
     return false;
   }
 
   async create(createProductDto: CreateProductDto) {
+    if (createProductDto.price < 0) {
+      throw new RpcException(ProductError.PRODUCT_PRICE_CANNOT_BE_NEGATIVE);
+    }
+    if (createProductDto.stock < 0) {
+      throw new RpcException(ProductError.PRODUCT_STOCK_CANNOT_BE_NEGATIVE);
+    }
+
     const createdNewProduct = await this.productModel.findOrCreate({
       where: { productToken: createProductDto.productToken },
       defaults: { ...createProductDto },
@@ -36,6 +39,7 @@ export class ProductService {
 
     return createdNewProduct[0];
   }
+
   show() {
     return false;
   }

@@ -6,7 +6,7 @@ TODOLIST for later (Serge Benissanh 08/03/2026)
 - install nest usefull utils (config [OK], logger [OK], swagger [OK], cors [ok], helmet [OK], ratelimit [OK]) 
 - dockerize app for easy mysql instance access [OK]
 - setup data schemas + sequelize [OK]
-- create ecommerce product route create 
+- create ecommerce product route create [OK]
 - create ecommerce product route show
 - create ecommerce product route index
 - create ecommerce product route patch 

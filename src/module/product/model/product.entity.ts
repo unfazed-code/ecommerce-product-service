@@ -8,7 +8,7 @@ export class Product extends Model {
   @Column({ allowNull: false })
   name: string;
 
-  @Column({ allowNull: false, type: DataType.DECIMAL })
+  @Column({ allowNull: false, type: DataType.DECIMAL(10, 2) })
   price: string;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
