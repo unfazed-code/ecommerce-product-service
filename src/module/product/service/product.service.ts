@@ -40,8 +40,16 @@ export class ProductService {
     return createdNewProduct[0];
   }
 
-  show() {
-    return false;
+  async show(id: number) {
+    const product = await this.productModel.findOne({
+      where: { id },
+    });
+
+    if (!product) {
+      throw new RpcException(ProductError.PRODUCT_NOT_FOUND);
+    }
+
+    return product;
   }
   patch() {
     return false;
