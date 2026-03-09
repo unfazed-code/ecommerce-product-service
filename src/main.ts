@@ -16,7 +16,7 @@ async function bootstrap() {
   productMicroservice.enableCors();
 
   // Pipes + filters
-  productMicroservice.useGlobalPipes(new ValidationPipe());
+  productMicroservice.useGlobalPipes(new ValidationPipe({ transform: true }));
   productMicroservice.useGlobalFilters(new ExceptionFilter());
 
   // Tcp

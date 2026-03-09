@@ -28,6 +28,7 @@ describe('ProductService', () => {
           provide: LoggerService,
           useValue: {
             setContext: jest.fn(),
+            debug: jest.fn(),
             log: jest.fn(),
           },
         },
@@ -122,5 +123,29 @@ describe('ProductService', () => {
 
     const result = service.show(20);
     await expect(result).rejects.toThrow(ProductError.PRODUCT_NOT_FOUND);
+  });
+
+  it('PATCH: should throw a not_found exception if product id not present in database', async () => {
+    productModel.findOne = jest.fn().mockResolvedValue(null);
+
+    const result = service.patch(1, { stock: 50 });
+    await expect(result).rejects.toThrow(ProductError.PRODUCT_NOT_FOUND);
+  });
+
+  it('PATCH: should update a product stock', async () => {
+    const product = {
+      id: 1,
+      name: 'product',
+      price: 10,
+      stock: 50,
+      productToken: 'product-token',
+      update: jest.fn(),
+    };
+    productModel.findOne = jest.fn().mockResolvedValue(product);
+
+    await service.patch(product.id, { stock: 42 });
+    expect(product.update).toHaveBeenCalledWith(
+      expect.objectContaining({ stock: 42 }),
+    );
   });
 });

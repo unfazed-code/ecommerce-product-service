@@ -5,6 +5,7 @@ import { Product } from '../model/product.entity';
 import { CreateProductDto } from '../controller/create-product.dto';
 import { RpcException } from '@nestjs/microservices';
 import { ProductError } from '../product.type';
+import { PatchProductDto } from '../controller/patch-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -21,6 +22,10 @@ export class ProductService {
   }
 
   async create(createProductDto: CreateProductDto) {
+    this.logger.debug(
+      `||> creating product ${JSON.stringify(createProductDto)}`,
+    );
+
     if (createProductDto.price < 0) {
       throw new RpcException(ProductError.PRODUCT_PRICE_CANNOT_BE_NEGATIVE);
     }
@@ -30,7 +35,11 @@ export class ProductService {
 
     const createdNewProduct = await this.productModel.findOrCreate({
       where: { productToken: createProductDto.productToken },
-      defaults: { ...createProductDto },
+      defaults: {
+        ...createProductDto,
+        name: createProductDto.name.trim(),
+        productToken: createProductDto.productToken.trim(),
+      },
     });
 
     if (!createdNewProduct[1]) {
@@ -41,6 +50,8 @@ export class ProductService {
   }
 
   async show(id: number) {
+    this.logger.debug(`||> showing product ${id}`);
+
     const product = await this.productModel.findOne({
       where: { id },
     });
@@ -51,8 +62,21 @@ export class ProductService {
 
     return product;
   }
-  patch() {
-    return false;
+
+  async patch(id: number, patchProductDto: PatchProductDto) {
+    this.logger.debug(
+      `||> updating product ${id} stock ${JSON.stringify(patchProductDto)}`,
+    );
+
+    const product = await this.productModel.findOne({
+      where: { id: id },
+    });
+
+    if (!product) {
+      throw new RpcException(ProductError.PRODUCT_NOT_FOUND);
+    }
+
+    return await product.update({ stock: patchProductDto.stock });
   }
   delete() {
     return false;

@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductService } from '../service/product.service';
 import { ProductMessagePattern } from '../product.type';
 import { CreateProductDto } from './create-product.dto';
+import { PatchProductDto } from './patch-product.dto';
 
 @Controller()
 export class ProductRpcController {
@@ -24,8 +25,8 @@ export class ProductRpcController {
   }
 
   @MessagePattern(ProductMessagePattern.PATCH)
-  patch() {
-    return this.service.patch();
+  patch(@Payload() payload: PatchProductDto & { id: number }) {
+    return this.service.patch(payload.id, payload);
   }
 
   @MessagePattern(ProductMessagePattern.DELETE)
