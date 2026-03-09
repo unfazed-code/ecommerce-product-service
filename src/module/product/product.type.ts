@@ -21,3 +21,8 @@ export const ProductErrorMapping: Record<ProductError, HttpStatus> = {
   [ProductError.PRODUCT_STOCK_CANNOT_BE_NEGATIVE]: HttpStatus.BAD_REQUEST,
   [ProductError.PRODUCT_NOT_FOUND]: HttpStatus.NOT_FOUND,
 };
+
+export type PaginationOptions = {
+  page: number;
+  perPage: number;
+};

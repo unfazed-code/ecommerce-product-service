@@ -4,8 +4,10 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Product } from '../model/product.entity';
 import { CreateProductDto } from '../controller/create-product.dto';
 import { RpcException } from '@nestjs/microservices';
-import { ProductError } from '../product.type';
+import { type PaginationOptions, ProductError } from '../product.type';
 import { PatchProductDto } from '../controller/patch-product.dto';
+import { ProductResponseDto } from '../controller/product-response.dto';
+import { NOW } from 'sequelize';
 
 @Injectable()
 export class ProductService {
@@ -17,11 +19,36 @@ export class ProductService {
     logger.setContext(ProductService.name);
   }
 
-  index() {
-    return false;
+  async index(paginationOptions: PaginationOptions) {
+    this.logger.debug(`||> reading paginated products`);
+
+    const page = Math.max(1, paginationOptions.page);
+    const perPage = Math.max(1, paginationOptions.perPage);
+    const offset = (page - 1) * perPage;
+
+    const { count, rows: products } = await this.productModel.findAndCountAll({
+      limit: perPage,
+      offset,
+    });
+
+    const hasNextPage = count > offset + perPage;
+    const nextPage = hasNextPage ? page + 1 : null;
+    const previousPage = page > 1 ? page - 1 : null;
+
+    return {
+      data: products,
+      count,
+      currentPage: page,
+      perPage,
+      previousPage,
+      nextPage,
+      totalPages: Math.ceil(count / perPage),
+    };
   }
 
-  async create(createProductDto: CreateProductDto) {
+  async create(
+    createProductDto: CreateProductDto,
+  ): Promise<ProductResponseDto> {
     this.logger.debug(
       `||> creating product ${JSON.stringify(createProductDto)}`,
     );
@@ -46,7 +73,7 @@ export class ProductService {
       throw new RpcException(ProductError.PRODUCT_TOKEN_ALREADY_EXISTS);
     }
 
-    return createdNewProduct[0];
+    return this.buildProductResponseDto(createdNewProduct[0]);
   }
 
   async show(id: number) {
@@ -60,7 +87,7 @@ export class ProductService {
       throw new RpcException(ProductError.PRODUCT_NOT_FOUND);
     }
 
-    return product;
+    return this.buildProductResponseDto(product);
   }
 
   async patch(id: number, patchProductDto: PatchProductDto) {
@@ -76,7 +103,11 @@ export class ProductService {
       throw new RpcException(ProductError.PRODUCT_NOT_FOUND);
     }
 
-    return await product.update({ stock: patchProductDto.stock });
+    const updatedProduct = await product.update({
+      stock: patchProductDto.stock,
+      updatedAt: NOW,
+    });
+    return this.buildProductResponseDto(updatedProduct);
   }
 
   async delete(id: number) {
@@ -91,5 +122,17 @@ export class ProductService {
     }
 
     return await product.destroy();
+  }
+
+  private buildProductResponseDto(product: Product): ProductResponseDto {
+    return {
+      id: product.get('id') as number,
+      name: product.get('name'),
+      productToken: product.get('productToken'),
+      price: product.get('price'),
+      stock: product.get('stock'),
+      createAt: product.get('createdAt') as Date,
+      updatedAt: product.get('updatedAt') as Date,
+    };
   }
 }
