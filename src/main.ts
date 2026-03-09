@@ -5,7 +5,8 @@ import { ProductModule } from './module/product/product.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './config/swagger.config';
 import helmet from 'helmet';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ExceptionFilter } from './utils/http-exception-filter';
 
 async function bootstrap() {
   // gateway service (http) + ecommerce microservice (tcp)
@@ -31,6 +32,9 @@ async function bootstrap() {
 
   // Helmet + Cors
   apiGatewayService.use(helmet());
+  apiGatewayService.useGlobalPipes(new ValidationPipe());
+  apiGatewayService.useGlobalFilters(new ExceptionFilter());
+  productMicroservice.useGlobalFilters(new ExceptionFilter());
   apiGatewayService.enableCors();
 
   await productMicroservice.listen();

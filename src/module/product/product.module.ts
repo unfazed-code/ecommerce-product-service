@@ -6,11 +6,13 @@ import { ConfigModule } from '@nestjs/config';
 import { envConfigOptions } from 'src/config/env.config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { sequelizeConfig } from 'src/config/database.config';
+import { Product } from './product.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(envConfigOptions),
     SequelizeModule.forRootAsync(sequelizeConfig),
+    SequelizeModule.forFeature([Product]),
   ],
   controllers: [ProductController],
   providers: [ProductService, LoggerService],

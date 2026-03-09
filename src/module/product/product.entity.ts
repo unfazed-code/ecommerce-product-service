@@ -1,16 +1,16 @@
-import { Table, Column, Model } from 'sequelize-typescript';
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
-@Table({ timestamps: true, deletedAt: true })
+@Table({ tableName: 'products', timestamps: true, deletedAt: true })
 export class Product extends Model {
-  @Column({ unique: true })
+  @Column({ allowNull: false, unique: true })
   productToken: string;
 
-  @Column
+  @Column({ allowNull: false })
   name: string;
 
-  @Column
+  @Column({ allowNull: false, type: DataType.DECIMAL })
   price: string;
 
-  @Column
+  @Column({ allowNull: false, type: DataType.INTEGER })
   stock: number;
 }

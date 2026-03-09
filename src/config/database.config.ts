@@ -18,6 +18,7 @@ export const sequelizeConfig: SequelizeModuleAsyncOptions = {
       models: [Product],
       synchronize:
         configService.getOrThrow('NODE_ENV') === 'production' ? false : true,
+      autoLoadModels: true,
     } as SequelizeModuleOptions;
   },
 };

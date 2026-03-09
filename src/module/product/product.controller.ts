@@ -1,7 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductService } from './product.service';
 import { ProductMessagePattern } from './product.type';
+import { CreateProductDto } from './create-product.dto';
 
 @Controller()
 export class ProductController {
@@ -18,8 +19,8 @@ export class ProductController {
   }
 
   @MessagePattern(ProductMessagePattern.CREATE)
-  create() {
-    return this.service.create();
+  create(@Payload() createProductDto: CreateProductDto) {
+    return this.service.create(createProductDto);
   }
 
   @MessagePattern(ProductMessagePattern.SHOW)
