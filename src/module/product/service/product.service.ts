@@ -78,7 +78,18 @@ export class ProductService {
 
     return await product.update({ stock: patchProductDto.stock });
   }
-  delete() {
-    return false;
+
+  async delete(id: number) {
+    this.logger.debug(`||> deleting product ${id}`);
+
+    const product = await this.productModel.findOne({
+      where: { id: id },
+    });
+
+    if (!product) {
+      throw new RpcException(ProductError.PRODUCT_NOT_FOUND);
+    }
+
+    return await product.destroy();
   }
 }

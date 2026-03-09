@@ -148,4 +148,26 @@ describe('ProductService', () => {
       expect.objectContaining({ stock: 42 }),
     );
   });
+
+  it('DELETE: should throw a not_found exception if product id not present in database', async () => {
+    productModel.findOne = jest.fn().mockResolvedValue(null);
+
+    const result = service.delete(1);
+    await expect(result).rejects.toThrow(ProductError.PRODUCT_NOT_FOUND);
+  });
+
+  it('DELETE: should delete a product', async () => {
+    const product = {
+      id: 1,
+      name: 'product',
+      price: 10,
+      stock: 50,
+      productToken: 'product-token',
+      destroy: jest.fn(),
+    };
+    productModel.findOne = jest.fn().mockResolvedValue(product);
+
+    await service.delete(product.id);
+    expect(product.destroy).toHaveBeenCalled();
+  });
 });

@@ -7,8 +7,8 @@ TODOLIST for later (Serge Benissanh 08/03/2026)
 - dockerize app for easy mysql instance access [OK]
 - setup data schemas + sequelize [OK]
 - create ecommerce product route create [OK]
-- create ecommerce product route show
+- create ecommerce product route show [OK]
 - create ecommerce product route index
-- create ecommerce product route patch 
-- create ecommerce product route delete
+- create ecommerce product route patch [OK]
+- create ecommerce product route delete [OK]
 - protect api with auth token?

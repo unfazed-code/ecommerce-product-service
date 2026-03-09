@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -39,5 +40,10 @@ export class ProductHttpController {
       ...patchProductDto,
       id,
     });
+  }
+
+  @Delete('/:id')
+  delete(@Param('id', new ParseIntPipe()) id: number) {
+    return this.client.send(ProductMessagePattern.DELETE, id);
   }
 }

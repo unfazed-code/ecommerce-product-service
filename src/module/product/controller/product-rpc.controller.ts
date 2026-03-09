@@ -30,7 +30,7 @@ export class ProductRpcController {
   }
 
   @MessagePattern(ProductMessagePattern.DELETE)
-  delete() {
-    return this.service.delete();
+  delete(id: number) {
+    return this.service.delete(id);
   }
 }
