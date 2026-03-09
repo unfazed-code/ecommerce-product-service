@@ -19,8 +19,8 @@ export class ProductRpcController {
   }
 
   @MessagePattern(ProductMessagePattern.SHOW)
-  show() {
-    return this.service.show();
+  show(@Payload() id: number) {
+    return this.service.show(id);
   }
 
   @MessagePattern(ProductMessagePattern.PATCH)

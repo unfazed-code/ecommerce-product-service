@@ -3,7 +3,7 @@ import {
   SequelizeModuleAsyncOptions,
   SequelizeModuleOptions,
 } from '@nestjs/sequelize';
-import { Product } from 'src/module/product/product.entity';
+import { Product } from 'src/module/product/model/product.entity';
 
 export const sequelizeConfig: SequelizeModuleAsyncOptions = {
   inject: [ConfigService],

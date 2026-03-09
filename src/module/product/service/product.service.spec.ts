@@ -42,7 +42,7 @@ describe('ProductService', () => {
     await app.close();
   });
 
-  it('should create a new product if token does not exist', async () => {
+  it('CREATE: should create a new product if token does not exist', async () => {
     const createProductDto: CreateProductDto = {
       name: 'New product',
       price: 10,
@@ -59,7 +59,7 @@ describe('ProductService', () => {
     expect(result).toEqual(mockProduct);
   });
 
-  it('should throw RpcException if product token already exists', async () => {
+  it('CREATE: should throw RpcException if product token already exists', async () => {
     const createProductDto = {
       name: 'Existing product',
       price: 10,
@@ -73,7 +73,7 @@ describe('ProductService', () => {
     );
   });
 
-  it('should throw RpcException if product price < 0', async () => {
+  it('CREATE: should throw RpcException if product price < 0', async () => {
     const createProductDto = {
       name: 'product',
       price: -10,
@@ -88,7 +88,7 @@ describe('ProductService', () => {
     );
   });
 
-  it('should throw RpcException if product stock < 0', async () => {
+  it('CREATE: should throw RpcException if product stock < 0', async () => {
     const createProductDto = {
       name: 'product',
       price: 10,
@@ -101,5 +101,26 @@ describe('ProductService', () => {
     await expect(result).rejects.toThrow(
       ProductError.PRODUCT_STOCK_CANNOT_BE_NEGATIVE,
     );
+  });
+
+  it('SHOW: should find a product by id if present in database', async () => {
+    const product = {
+      id: 1,
+      name: 'product',
+      price: 10,
+      stock: 50,
+      productToken: 'product-token',
+    };
+    productModel.findOne = jest.fn().mockResolvedValue(product);
+
+    const result = service.show(product.id);
+    await expect(result).resolves.toEqual(product);
+  });
+
+  it('SHOW: should throw a not_found exception if product id not present in database', async () => {
+    productModel.findOne = jest.fn().mockResolvedValue(null);
+
+    const result = service.show(20);
+    await expect(result).rejects.toThrow(ProductError.PRODUCT_NOT_FOUND);
   });
 });
