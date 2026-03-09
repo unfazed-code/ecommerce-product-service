@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
-export class EcommerceLoggerService extends Logger {
+export class LoggerService extends Logger {
   constructor() {
     super();
-    this.context = EcommerceLoggerService.name;
+    this.context = LoggerService.name;
   }
 
   setContext(context: string) {

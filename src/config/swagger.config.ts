@@ -1,8 +1,8 @@
 import { DocumentBuilder } from '@nestjs/swagger';
 
 export const swaggerConfig = new DocumentBuilder()
-  .setTitle('Ecommerce API')
-  .setDescription('Ecommerce API')
+  .setTitle('Ecommerce Product Microservice')
+  .setDescription('Ecommerce Product Microservice')
   .setVersion('1.0')
-  .addTag('ecommerce')
+  .addTag('ecommerce-product-microservice')
   .build();

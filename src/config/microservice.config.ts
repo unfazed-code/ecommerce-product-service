@@ -1,10 +1,9 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { TcpClientOptions, Transport } from '@nestjs/microservices';
-import { envConfigOptions } from './env.config';
 
-export const ECOMMERCE_SERVICE_CLIENT = Symbol('ECOMMERCE_SERVICE');
+export const PRODUCT_SERVICE_CLIENT = Symbol('PRODUCT_SERVICE_CLIENT');
 
-export const ecommerceClientProxyConfig = (
+export const productClientProxyConfig = (
   host: string,
   port: number,
 ): TcpClientOptions => ({
@@ -14,13 +13,12 @@ export const ecommerceClientProxyConfig = (
 
 export const clientProxyConfigs = [
   {
-    imports: [ConfigModule.forRoot(envConfigOptions)],
-    name: ECOMMERCE_SERVICE_CLIENT,
-    useFactory: (configService: ConfigService) =>
-      ecommerceClientProxyConfig(
-        configService.getOrThrow('ECOMMERCE_SERVICE_HOST'),
-        configService.getOrThrow('ECOMMERCE_SERVICE_PORT'),
-      ),
+    name: PRODUCT_SERVICE_CLIENT,
     inject: [ConfigService],
+    useFactory: (configService: ConfigService) =>
+      productClientProxyConfig(
+        configService.getOrThrow('PRODUCT_MICROSERVICE_HOST'),
+        configService.getOrThrow('PRODUCT_MICROSERVICE_TCP_PORT'),
+      ),
   },
 ];
