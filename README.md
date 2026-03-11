@@ -31,6 +31,8 @@ $ npm install
 $ docker compose up --watch --build
 ```
 
+Api doc available on /product-api-doc
+
 ## Project setup (Without Docker)
 
 ```bash
