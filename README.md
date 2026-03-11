@@ -24,24 +24,24 @@ TEST_MYSQL_DATABASE=ecommerce_test  #for local test database
 
 ## Project setup (With Docker)
 
-make sure the file init-databases.sql creates the same  MYSQL_DATABASE and TEST_MYSQL_DATABASE as in the .env file
-
 ```bash
 $ cp .env.example .env
 $ npm install
 $ docker compose up --watch --build
 ```
+make sure to change database names also in **init-databases.sql** if you change the *MYSQL_DATABASE* and *TEST_MYSQL_DATABASE* variables in .env file
 
 The server should start listening for http requests on port **3000** (http://localhost:3000) and tcp rpc requests on port **3001**
 
 Api doc should be available on route path **/product-api-doc** and accessible 
-with this link http://localhost:3000/product-api-doc
+with this link **http://localhost:3000/product-api-doc**
 
 ## Project setup (Without Docker)
 
+Needs a local/remote db instance with a database called *ecommerce* to work  
+
 ```bash
-$ cp .env
-$ cp .env.example
+$ cp .env.example .env
 $ npm install
 ```
 
@@ -58,7 +58,8 @@ $ npm run start:prod
 
 ## Run tests
 
-Start local docker database instance (or ignore if using another mysql database)
+Start local docker database instance (or ignore if using another local/remote mysql database). 
+Remember to adapt *TEST_PRODUCT_MICROSERVICE_HTTP_PORT*, *TEST_PRODUCT_MICROSERVICE_TCP_PORT*, *TEST_MYSQL_HOST* and *TEST_MYSQL_DATABASE* variables for test
 
 ```bash
 $ docker compose up mysql
