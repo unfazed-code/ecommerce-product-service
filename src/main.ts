@@ -47,4 +47,4 @@ async function bootstrap() {
     `Product microservice listening on port ${process.env.PRODUCT_MICROSERVICE_TCP_PORT} (tcp)`,
   );
 }
-bootstrap();
+bootstrap().catch((e) => console.error(e));
