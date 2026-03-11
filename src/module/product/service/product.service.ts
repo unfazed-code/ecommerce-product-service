@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { LoggerService } from '../../../utils/logger.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { Product } from '../model/product.entity';
-import { CreateProductDto } from '../controller/create-product.dto';
+import { CreateProductDto } from '../dto/create-product.dto';
 import { RpcException } from '@nestjs/microservices';
 import { type PaginationOptions, ProductError } from '../product.type';
-import { PatchProductDto } from '../controller/patch-product.dto';
-import { ProductResponseDto } from '../controller/product-response.dto';
+import { PatchProductDto } from '../dto/patch-product.dto';
+import {
+  ProductPaginationResponse,
+  ProductResponseDto,
+} from '../dto/product-response.dto';
 import { NOW } from 'sequelize';
 
 @Injectable()
@@ -19,7 +22,9 @@ export class ProductService {
     logger.setContext(ProductService.name);
   }
 
-  async index(paginationOptions: PaginationOptions) {
+  async index(
+    paginationOptions: PaginationOptions,
+  ): Promise<ProductPaginationResponse> {
     this.logger.debug(`||> reading paginated products`);
 
     const page = Math.max(1, paginationOptions.page);
@@ -36,7 +41,7 @@ export class ProductService {
     const previousPage = page > 1 ? page - 1 : null;
 
     return {
-      data: products,
+      data: products.map((product) => this.buildProductResponseDto(product)),
       count,
       currentPage: page,
       perPage,
@@ -124,14 +129,14 @@ export class ProductService {
     return await product.destroy();
   }
 
-  private buildProductResponseDto(product: Product): ProductResponseDto {
+  protected buildProductResponseDto(product: Product): ProductResponseDto {
     return {
       id: product.get('id') as number,
       name: product.get('name'),
       productToken: product.get('productToken'),
-      price: product.get('price'),
+      price: Number(product.get('price')),
       stock: product.get('stock'),
-      createAt: product.get('createdAt') as Date,
+      createdAt: product.get('createdAt') as Date,
       updatedAt: product.get('updatedAt') as Date,
     };
   }

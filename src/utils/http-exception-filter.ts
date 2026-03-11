@@ -4,7 +4,7 @@ import { RpcException } from '@nestjs/microservices';
 import {
   ProductError,
   ProductErrorMapping,
-} from 'src/module/product/product.type';
+} from '../module/product/product.type';
 
 @Catch(RpcException)
 export class ExceptionFilter implements RpcExceptionFilter<RpcException> {

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsDate, IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
+import { IsDate, IsInt, IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class ProductResponseDto {
   @ApiProperty({
@@ -29,8 +29,8 @@ export class ProductResponseDto {
     description: 'Product price',
     example: 58.99,
   })
-  @IsString()
-  price: string;
+  @IsNumber()
+  price: number;
 
   @ApiProperty({
     description: 'Product stock quantity',
@@ -45,7 +45,7 @@ export class ProductResponseDto {
     example: new Date(),
   })
   @IsDate()
-  createAt: Date;
+  createdAt: Date;
 
   @ApiProperty({
     description: 'Product last update date',
@@ -54,3 +54,13 @@ export class ProductResponseDto {
   @IsDate()
   updatedAt: Date;
 }
+
+export type ProductPaginationResponse = {
+  data: ProductResponseDto[];
+  count: number;
+  currentPage: number;
+  perPage: number;
+  previousPage: number | null;
+  nextPage: number | null;
+  totalPages: number;
+};

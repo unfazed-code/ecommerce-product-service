@@ -4,6 +4,7 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  HttpCode,
   Inject,
   Param,
   ParseIntPipe,
@@ -11,13 +12,21 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CreateProductDto } from './create-product.dto';
-import { PRODUCT_SERVICE_CLIENT } from 'src/config/microservice.config';
+import { CreateProductDto } from '../dto/create-product.dto';
+import { PRODUCT_SERVICE_CLIENT } from '../../../config/microservice.config';
 import { ClientProxy } from '@nestjs/microservices';
 import { PaginationOptions, ProductMessagePattern } from '../product.type';
-import { PatchProductDto } from './patch-product.dto';
-import { ApiBody, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
-import { ProductResponseDto } from './product-response.dto';
+import { PatchProductDto } from '../dto/patch-product.dto';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { ProductResponseDto } from '../dto/product-response.dto';
 
 @Controller('products')
 export class ProductHttpController {
@@ -40,6 +49,7 @@ export class ProductHttpController {
     description: 'pagination perPage parameter (integer >= 1)',
     required: false,
   })
+  @ApiOkResponse()
   index(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('perPage', new DefaultValuePipe(10), ParseIntPipe) perPage: number,
@@ -57,6 +67,7 @@ export class ProductHttpController {
     description: 'Payload for product creation',
   })
   @ApiResponse({ type: ProductResponseDto })
+  @ApiCreatedResponse()
   create(@Body() createProductDto: CreateProductDto) {
     return this.client.send(ProductMessagePattern.CREATE, createProductDto);
   }
@@ -64,6 +75,7 @@ export class ProductHttpController {
   @Get('/:id')
   @ApiParam({ type: Number, name: 'id', description: 'Product id' })
   @ApiResponse({ type: ProductResponseDto })
+  @ApiOkResponse()
   show(@Param('id', new ParseIntPipe()) id: number) {
     return this.client.send(ProductMessagePattern.SHOW, id);
   }
@@ -75,6 +87,7 @@ export class ProductHttpController {
     description: 'Payload for product creation',
   })
   @ApiResponse({ type: ProductResponseDto })
+  @ApiOkResponse()
   patch(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() patchProductDto: PatchProductDto,
@@ -87,6 +100,8 @@ export class ProductHttpController {
 
   @Delete('/:id')
   @ApiParam({ type: Number, name: 'id', description: 'Product id' })
+  @HttpCode(204)
+  @ApiNoContentResponse()
   delete(@Param('id', new ParseIntPipe()) id: number) {
     return this.client.send(ProductMessagePattern.DELETE, id);
   }

@@ -2,9 +2,9 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductService } from '../service/product.service';
 import { type PaginationOptions, ProductMessagePattern } from '../product.type';
-import { CreateProductDto } from './create-product.dto';
-import { PatchProductDto } from './patch-product.dto';
-import { ProductResponseDto } from './product-response.dto';
+import { CreateProductDto } from '../dto/create-product.dto';
+import { PatchProductDto } from '../dto/patch-product.dto';
+import { ProductResponseDto } from '../dto/product-response.dto';
 
 @Controller()
 export class ProductRpcController {

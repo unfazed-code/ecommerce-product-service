@@ -18,7 +18,9 @@ export const clientProxyConfigs = [
     useFactory: (configService: ConfigService) =>
       productClientProxyConfig(
         configService.getOrThrow('PRODUCT_MICROSERVICE_HOST'),
-        configService.getOrThrow('PRODUCT_MICROSERVICE_TCP_PORT'),
+        configService.getOrThrow('NODE_ENV') === 'test'
+          ? configService.getOrThrow('TEST_PRODUCT_MICROSERVICE_TCP_PORT')
+          : configService.getOrThrow('PRODUCT_MICROSERVICE_TCP_PORT'),
       ),
   },
 ];
