@@ -1,4 +1,5 @@
 
+
 ## Description
 
 Coding assignment - Ecommerce product backend service
@@ -31,7 +32,10 @@ $ npm install
 $ docker compose up --watch --build
 ```
 
-Api doc available on /product-api-doc
+The server should start listening for http requests on port **3000** (http://localhost:3000) and tcp rpc requests on port **3001**
+
+Api doc should be available on route path **/product-api-doc** and accessible 
+with this link http://localhost:3000/product-api-doc
 
 ## Project setup (Without Docker)
 
